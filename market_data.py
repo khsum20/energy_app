@@ -1,24 +1,22 @@
-import requests
+import os
 import pandas as pd
+from entsoe import EntsoePandasClient
+
 
 def get_finnish_prices():
-    url = "https://www.nordpoolgroup.com/api/marketdata/page/10?currency=EUR&area=FI"
+    api_key = os.getenv("ENTSOE_API_KEY")
+    if not api_key:
+        raise ValueError("ENTSOE_API_KEY is missing")
 
-    r = requests.get(url)
-    data = r.json()
+    client = EntsoePandasClient(api_key=api_key)
 
-    rows = data["data"]["Rows"]
+    start = pd.Timestamp.now(tz="Europe/Helsinki").normalize()
+    end = start + pd.Timedelta(days=1)
 
-    prices = []
-    for row in rows:
-        try:
-            price = float(row["Columns"][0]["Value"].replace(",", "."))
-            prices.append(price)
-        except:
-            prices.append(None)
+    prices = client.query_day_ahead_prices("FI", start=start, end=end)
 
-    df = pd.DataFrame({
-        "price": prices
-    })
+    # Convert Series -> DataFrame and align column name with your optimizer
+    df = prices.reset_index()
+    df.columns = ["time", "price"]
 
-    return df
+    return df[["price"]]
