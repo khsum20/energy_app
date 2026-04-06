@@ -7,6 +7,7 @@ st.title("Energy Optimizer")
 
 df = generate_data(24)
 price_df = get_finnish_prices()
+
 df["price"] = price_df["price"].values[:len(df)]
 result = optimize(df)
 
