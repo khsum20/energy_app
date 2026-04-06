@@ -6,9 +6,14 @@ from market_data import get_finnish_prices
 st.title("Energy Optimizer")
 
 df = generate_data(24)
-price_df = get_finnish_prices()
 
-df["price"] = price_df["price"].values[:len(df)]
+try:
+    price_df = get_finnish_prices()
+    df["price"] = price_df["price"].values[:len(df)]
+    st.success("Loaded ENTSO-E Finland day-ahead prices")
+except Exception as e:
+    st.warning(f"Using fallback prices: {e}")
+
 result = optimize(df)
 
 st.subheader("Solar and Load")
