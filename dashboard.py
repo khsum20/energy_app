@@ -13,6 +13,10 @@ try:
     st.success("Loaded ENTSO-E Finland day-ahead prices")
 except Exception as e:
     st.warning(f"Using fallback prices: {e}")
+    price_df = df[["price"]].copy()
+
+st.subheader("Finnish Grid Price Chart")
+st.line_chart(price_df["price"])
 
 result = optimize(df)
 
