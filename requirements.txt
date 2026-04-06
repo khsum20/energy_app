@@ -4,3 +4,4 @@ numpy
 pulp
 matplotlib
 requests
+entsoe-py
