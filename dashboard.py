@@ -1,10 +1,13 @@
 import streamlit as st
 from data_simulator import generate_data
 from optimizer import optimize
+from market_data import get_market_prices
 
 st.title("Energy Optimizer")
 
 df = generate_data(24)
+price_df = get_market_prices()
+df["price"] = price_df["price"].values[:len(df)]
 result = optimize(df)
 
 st.subheader("Solar and Load")
