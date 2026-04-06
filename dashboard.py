@@ -2,6 +2,7 @@ import streamlit as st
 from data_simulator import generate_data
 from optimizer import optimize
 from market_data import get_finnish_prices
+from entsoe import EntsoePandasClient
 
 st.title("Energy Optimizer")
 
